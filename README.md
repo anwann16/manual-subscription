@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Manual Subscription — Auth
 
-## Getting Started
+Fitur autentikasi saja (Next.js 16 App Router, Prisma 7, NextAuth v5 / Auth.js).
+Fitur subscription belum ada di project ini.
 
-First, run the development server:
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
+cp .env.example .env   # isi DATABASE_URL dan AUTH_SECRET
+bunx prisma migrate deploy
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`AUTH_SECRET` dibuat dengan `openssl rand -base64 32`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Keterangan |
+|---|---|
+| `DATABASE_URL` | Connection string PostgreSQL (Prisma + driver adapter `pg`). |
+| `AUTH_SECRET` | Kunci enkripsi JWT session NextAuth. Wajib di production. |
 
-## Learn More
+## Akun demo
 
-To learn more about Next.js, take a look at the following resources:
+Skema hanya memuat tabel `User`; belum ada seed, jadi buat akun pertama lewat `/register`
+(role default `USER`). Untuk akun `ADMIN`, ubah kolom `role` baris tersebut di database.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Authentication
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+NextAuth v5 dengan Credentials provider dan strategi session **JWT**.
 
-## Deploy on Vercel
+- `src/auth.ts` — konfigurasi NextAuth: `authorize` memverifikasi password dengan bcrypt,
+  callback `jwt`/`session` menyalin `id` dan `role` ke session.
+- `src/app/api/auth/[...nextauth]/route.ts` — route handler NextAuth.
+- `src/features/auth/actions/` — server action `login`, `register`, dan `logout`.
+- `src/features/auth/dal.ts` — `getSession`, `requireUser`, `requireAdmin` untuk halaman server.
+- `src/proxy.ts` — proteksi route (Next.js 16 memakai `proxy.ts`, bukan `middleware.ts`).
+- `src/features/auth/components/` — UI autentikasi: `AuthShell` (frame editorial split),
+  `AuthCard` (enclosure double-bezel), `LoginForm`, `RegisterForm`, `PasswordInput`,
+  `AuthField`, `AuthSubmitButton`, `AuthNotice`.
+- `src/features/auth/next-auth.d.ts` — augmentasi tipe `Session`, `User`, dan `JWT`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Kenapa JWT, bukan database session: skema auth tidak mendefinisikan tabel `Account`, `Session`,
+atau `VerificationToken`, jadi adapter database tidak dipakai dan identitas dibaca ulang dari
+cookie yang ditandatangani pada setiap request.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Aturan akses:
+
+- `/login` dan `/register` publik; keduanya mengalihkan sesi yang sudah login ke `/dashboard`.
+- Route lain (termasuk `/dashboard`) membutuhkan sesi; pengunjung tanpa sesi diarahkan ke
+  `/login` oleh `authorized` callback di `src/auth.ts`.
