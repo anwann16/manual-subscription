@@ -15,3 +15,32 @@ export const UserRole = {
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const SubscriptionStatus = {
+  PENDING_PAYMENT: 'PENDING_PAYMENT',
+  WAITING_VERIFICATION: 'WAITING_VERIFICATION',
+  ACTIVE: 'ACTIVE',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const DurationUnit = {
+  DAY: 'DAY',
+  MONTH: 'MONTH',
+  YEAR: 'YEAR'
+} as const
+
+export type DurationUnit = (typeof DurationUnit)[keyof typeof DurationUnit]

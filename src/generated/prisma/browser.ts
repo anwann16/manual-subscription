@@ -22,3 +22,18 @@ export * from './enums';
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model SubscriptionPlan
+ * 
+ */
+export type SubscriptionPlan = Prisma.SubscriptionPlanModel
+/**
+ * Model Subscription
+ * 
+ */
+export type Subscription = Prisma.SubscriptionModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel

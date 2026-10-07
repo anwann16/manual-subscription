@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 
 import { register } from "@/features/auth/actions/auth.actions";
-import type { FormState } from "@/features/auth/form-state";
+import type { FormState } from "@/features/auth/form-state.type";
 import { FieldGroup } from "@/components/ui/field";
 import { AuthCard } from "./AuthCard";
 import { AuthField, AuthInput } from "./AuthField";

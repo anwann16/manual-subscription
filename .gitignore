@@ -11,6 +11,10 @@
 !.yarn/versions
 
 # testing
+/test/playwright-report
+/test/test-results
+/.playwright
+test/report.json
 /coverage
 
 # next.js
@@ -41,3 +45,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
+/docs
+
+# Test
+/test
+/test-results
+playwright.config.ts

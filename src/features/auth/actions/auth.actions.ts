@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { Prisma } from "@/generated/prisma/client";
 import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import type { FormState } from "@/features/auth/form-state";
+import type { FormState } from "@/features/auth/form-state.type";
 
 const SALT_ROUNDS = 10;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

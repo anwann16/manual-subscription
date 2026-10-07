@@ -127,6 +127,16 @@
   html {
     @apply font-sans;
   }
+
+  /*
+   * Tailwind v4 Preflight resets `button` to `cursor: default`, so every
+   * clickable control below would show a non-interactive cursor. Restore the
+   * pointer, leaving explicitly disabled controls non-clickable-looking.
+   */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
 }
 /* Auth surface: editorial-luxury texture + entry choreography. */
 @keyframes auth-rise {
