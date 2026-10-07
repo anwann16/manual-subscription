@@ -16,6 +16,7 @@
 /.playwright
 test/report.json
 /coverage
+/.playwright-mcp
 
 # next.js
 /.next/
